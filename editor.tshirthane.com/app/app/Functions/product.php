@@ -113,12 +113,6 @@
                 'images' => [
                     [
                         'imageUrl' => 'https://wwww.siteadresi.com/images1.jpg'
-                    ],
-                    [
-                        'imageUrl' => 'https://wwww.siteadresi.com/images2.jpg'
-                    ],
-                    [
-                        'imageUrl' => 'https://wwww.siteadresi.com/images3.jpg'
                     ]
                 ],
                 'attributes' => [

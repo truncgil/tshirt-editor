@@ -1,7 +1,5 @@
 <?php 
-Artisan::call('cache:clear');
-Artisan::call('config:clear');
-Artisan::call('view:clear');
+
 
 if(getisset("ajax")) {
 	?>
@@ -26,12 +24,12 @@ if(getisset("ajax")) {
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>{!! strip_tags($__env->yieldContent('title','')) !!}</title>
+    <title>@yield('title')</title>
     <meta name="description" content="">
     <meta name="author" content="Truncgil Technology">
-    <meta property="og:title" content="">
+    <meta property="og:title" content="@yield('title')">
     <meta property="og:site_name" content="https://www.truncgil.com.tr/">
-    <meta property="og:description" content="">
+    <meta property="og:description" content="@yield('description')">
     <meta property="og:type" content="app">
     <meta property="og:url" content>
     <meta property="og:image" content>

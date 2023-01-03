@@ -1,25 +1,11 @@
 
 {{col("col-12","Edit Form")}} 
-<?php if(getisset("update")) {
-    $p = $_POST;
+<?php
 
-    $json = $p;
-    $file = post("old_file");
-    if($_FILES['file']['name']!="") {
-        $file = upload("file","mockup/");
-     //   echo $file;
-    }
 
-    db($table_name)->where("id",get("edit"))->update([
-        "title" => $p['title'],
-        "html" => $p['html'],
-        "files" => $file,
-        "json" => json_encode_tr($json)
-    ]);
-  //  dump($json);
-    bilgi("Güncelleme yapıldı");
-    //exit();
-} ?>
+
+
+?>
                 <form action="{{url('admin-ajax/cover-upload')}}" class="hidden-upload" id="f{{$edit->id}}" enctype="multipart/form-data" method="post">
                                 <input type="file" name="cover" id="c{{$edit->id}}" onchange="$('#f{{$edit->id}}').submit();" required />
                                 <input type="hidden" name="id" value="{{$edit->id}}" />
@@ -83,7 +69,9 @@
                                                                 foreach($value2 AS $name3 => $value3) {
                                                                     ?>
                                                                     {{$name3}}
-                                                                    <input type="text" class="form-control" placeholder="{{$value3}}" name="{{$name}}[{{$name2}}][{{$name3}}]" placeholder="" id="">
+                                                                    <input type="text" class="form-control" placeholder="{{$value3}}" name="{{$name}}[{{$name2}}][{{$name3}}]" 
+                                                                    value="{{@$j[$name][$name2][$name3]}}"
+                                                                    placeholder="" id="">
                                                                     <?php 
                                                                 }
                                                                 ?>
@@ -92,7 +80,9 @@
                                                             } else  { 
                                                             ?>
                                                             {{$name2}}
-                                                            <input type="text" class="form-control" name="{{$name}}[{{$name2}}]" placeholder="{{$value2}}" id=""> 
+                                                            <input type="text" class="form-control" name="{{$name}}[{{$name2}}]" 
+                                                            value="{{@$j[$name][$name2]}}"
+                                                            placeholder="{{$value2}}" id=""> 
                                                             <?php } ?>
                                                         </div>
                                                     </div>
@@ -104,7 +94,7 @@
                                 
                                     } else  { 
                                     ?>
-                                            <input type="text" name="{{$name}}" placeholder="{{$value}}" id="" class="form-control"> 
+                                            <input type="text" name="{{$name}}" placeholder="{{$value}}" value="{{@$j[$name]}}" id="" class="form-control"> 
                                     <?php } ?>
                                 </div>
                             </div>
@@ -144,7 +134,7 @@
                 <hr />
                 <div class="">
                     <button type="submit" class="save-button btn btn-primary">{{__('Güncelle')}}</button>
-                    <div class="btn btn-danger">Test Olarak Gönder</div>
+                    <a href="?edit={{get("edit")}}&test"  class="ajax_modal btn btn-danger">Test Olarak Gönder</a>
                     <div class="test-sonuc"></div>
                 </div>
             </form>
