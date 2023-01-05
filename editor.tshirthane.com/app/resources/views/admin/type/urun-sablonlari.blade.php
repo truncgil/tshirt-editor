@@ -27,7 +27,7 @@
                             }
                             $file = str_replace("//","/",$file);
                             $json['images'][0]['imageUrl'] = env('APP_URL') . $file;
-                            dump($json);
+                        //    dump($json);
                             db($table_name)->where("id",get("edit"))->update([
                                 "title" => $p['title'],
                                 "html" => $p['html'],

@@ -1,11 +1,62 @@
 
-{{col("col-12","Edit Form")}} 
-<?php
-
-
-
+<?php 
+$path = "admin.type.urun-sablonlari";
+if(getisset("save-area")) {
+    //dd($_GET);
+    echo 
+    
+    db("urun_sablonlari")
+        ->where("id",get("edit"))
+        ->update([
+            'areas' => get("areas")
+        ]);
+    
+    exit();
+} 
 
 ?>
+<style>
+    #imageContainer {
+        position:relative;
+    }
+    <?php if($edit->areas!="")  { 
+        $area = j($edit->areas);
+       // dd($area);
+      ?>
+     .area {
+         position:absolute;
+         border:dashed 3px red;
+         top: {{$area['y']}}px;
+         left: {{$area['x']}}px;
+         width:{{$area['w']}}px;
+         height:{{$area['h']}}px;
+     } 
+     <?php } ?>
+</style>
+
+{{col("col-12","Edit Form")}} 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/css/jquery.Jcrop.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/js/jquery.Jcrop.js"></script>
+     
+<script>
+    $(function(){
+        $("#imageAreas").Jcrop({
+            onSelect: function(c){
+                $.get("?edit={{get("edit")}}&save-area",{
+                    areas : c
+                });
+                
+                console.log(c);
+
+                console.log(c.x);
+                console.log(c.y);
+                console.log(c.w);
+                console.log(c.h);
+            }
+        });
+    });
+</script>
                 <form action="{{url('admin-ajax/cover-upload')}}" class="hidden-upload" id="f{{$edit->id}}" enctype="multipart/form-data" method="post">
                                 <input type="file" name="cover" id="c{{$edit->id}}" onchange="$('#f{{$edit->id}}').submit();" required />
                                 <input type="hidden" name="id" value="{{$edit->id}}" />
@@ -19,7 +70,10 @@
                     <div class="col-md-12">
                         <?php if($edit->files!="") {
                              ?>
-                             <img src="{{url($edit->files)}}" alt="">
+                             <div id="imageContainer">
+                                <img src="{{url($edit->files)}}" id="imageAreas" alt="">
+                                <div class="area"></div>
+                             </div>
                              <?php 
                         } ?> <br>
                         Mockup Görseli
@@ -69,20 +123,56 @@
                                                                 foreach($value2 AS $name3 => $value3) {
                                                                     ?>
                                                                     {{$name3}}
-                                                                    <input type="text" class="form-control" placeholder="{{$value3}}" name="{{$name}}[{{$name2}}][{{$name3}}]" 
-                                                                    value="{{@$j[$name][$name2][$name3]}}"
-                                                                    placeholder="" id="">
+                                                                 <?php 
+                                                                switch ($name3) {
+                                                                    case 'currency':
+                                                                        $selectName = "$name[$name2][$name3]";
+                                                                        $selectValue = @$j[$name][$name2][$name3];
+                                                                         ?>
+                                                                        @include("$path.currency")
+                                                                         <?php 
+                                                                        break;
+                                                                    
+                                                                    default:
+                                                                     ?>
+                                                                            <input type="text" class="form-control" placeholder="{{$value3}}" name="{{$name}}[{{$name2}}][{{$name3}}]" 
+                                                                            value="{{@$j[$name][$name2][$name3]}}"
+                                                                            placeholder="" id="">
+                                                                     <?php 
+                                                                        break;
+                                                                }
+                                                            ?>
+                                                                    
                                                                     <?php 
                                                                 }
                                                                 ?>
                                                              
                                                                 <?php 
                                                             } else  { 
-                                                            ?>
-                                                            {{$name2}}
-                                                            <input type="text" class="form-control" name="{{$name}}[{{$name2}}]" 
+                                                                 ?>
+                                                                 {{$name2}}
+                                                                 <?php 
+                                                                switch ($name2) {
+                                                                    case 'currency':
+                                                                        $selectName = "$name[$name2]";
+                                                                        $selectValue = @$j[$name][$name2];
+                                                                         ?>
+                                                                         @include("$path.currency")
+                                                                         <?php 
+                                                                        break;
+                                                                    
+                                                                    default:
+                                                                     ?>
+                                                                        <input type="text" class="form-control" name="{{$name}}[{{$name2}}]" 
                                                             value="{{@$j[$name][$name2]}}"
-                                                            placeholder="{{$value2}}" id=""> 
+                                                            placeholder="{{$value2}}" id="">  
+                        
+                                                                     <?php 
+                                                                        break;
+                                                                }
+                                                            ?>
+                                                            
+                                                           
                                                             <?php } ?>
                                                         </div>
                                                     </div>
@@ -93,8 +183,23 @@
                                     <?php 
                                 
                                     } else  { 
+                                        switch ($name) {
+                                            case 'currency':
+                                                    $selectName = $name;
+                                                    $selectValue = @$j[$name];
+                                                 ?>
+                                                 @include("$path.currency")
+                                                 <?php 
+                                                break;
+                                            
+                                            default:
+                                             ?>
+                                                <input type="text" name="{{$name}}" placeholder="{{$value}}" value="{{@$j[$name]}}" id="" class="form-control"> 
+
+                                             <?php 
+                                                break;
+                                        }
                                     ?>
-                                            <input type="text" name="{{$name}}" placeholder="{{$value}}" value="{{@$j[$name]}}" id="" class="form-control"> 
                                     <?php } ?>
                                 </div>
                             </div>
