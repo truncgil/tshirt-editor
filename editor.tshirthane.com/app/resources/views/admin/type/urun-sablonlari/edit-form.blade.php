@@ -35,28 +35,7 @@ if(getisset("save-area")) {
 </style>
 
 {{col("col-12","Edit Form")}} 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/css/jquery.Jcrop.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/js/jquery.Jcrop.js"></script>
-     
-<script>
-    $(function(){
-        $("#imageAreas").Jcrop({
-            onSelect: function(c){
-                $.get("?edit={{get("edit")}}&save-area",{
-                    areas : c
-                });
-                
-                console.log(c);
-
-                console.log(c.x);
-                console.log(c.y);
-                console.log(c.w);
-                console.log(c.h);
-            }
-        });
-    });
-</script>
+@include("$path.script")
                 <form action="{{url('admin-ajax/cover-upload')}}" class="hidden-upload" id="f{{$edit->id}}" enctype="multipart/form-data" method="post">
                                 <input type="file" name="cover" id="c{{$edit->id}}" onchange="$('#f{{$edit->id}}').submit();" required />
                                 <input type="hidden" name="id" value="{{$edit->id}}" />
@@ -103,12 +82,23 @@ if(getisset("save-area")) {
                             </select>
                         </div>
                         <div class="row">
-                        <?php $array = productArray();
+                        <?php 
+                        
+                        $array = productArray();
+                        if(getisset("edit")) {
+                            if(is_array($j)) {
+                                $array = $j;
+                                dump($j);
+                            }
+                        }
+                       
                         foreach($array AS $name => $value) {
                              ?>
                              <div class="col-md-12">
                                 <div class="border p-10 mb-5 mt-5 rounded">
                                     {{$name}}
+                                    
+                                    
                                     <?php if(is_array($value)) {
                                         ?>
                                         <div class="row">
@@ -116,8 +106,8 @@ if(getisset("save-area")) {
                                             <?php 
                                                 foreach($value AS $name2 => $value2) {
                                                     ?>
-                                                    <div class="col-md-6 ">
-                                                        <div class="border p-10 mb-10 rounded">
+                                                    <div class="col-md-6 {{$name}} {{$name}}{{$name2}}">
+                                                        <div class="border p-10 mb-10 rounded ">
                                                             
                                                             <?php if(is_array($value2)) {
                                                                 foreach($value2 AS $name3 => $value3) {
@@ -125,8 +115,9 @@ if(getisset("save-area")) {
                                                                     {{$name3}}
                                                                  <?php 
                                                                 switch ($name3) {
+                                                                    
                                                                     case 'currency':
-                                                                        $selectName = "$name[$name2][$name3]";
+                                                                        $selectName = $name. "[$name2][$name3]";
                                                                         $selectValue = @$j[$name][$name2][$name3];
                                                                          ?>
                                                                         @include("$path.currency")
@@ -134,10 +125,13 @@ if(getisset("save-area")) {
                                                                         break;
                                                                     
                                                                     default:
-                                                                     ?>
-                                                                            <input type="text" class="form-control" placeholder="{{$value3}}" name="{{$name}}[{{$name2}}][{{$name3}}]" 
-                                                                            value="{{@$j[$name][$name2][$name3]}}"
-                                                                            placeholder="" id="">
+                                                                            $defaultName = $name . "[$name2][$name3]";
+                                                                            $defaultValue = @$j[$name][$name2][$name3];
+                                                                            $defaultPlaceHolder = $value3;
+
+                                                                        ?>
+                                                                            @include("$path.default")
+                                                                           
                                                                      <?php 
                                                                         break;
                                                                 }
@@ -153,8 +147,9 @@ if(getisset("save-area")) {
                                                                  {{$name2}}
                                                                  <?php 
                                                                 switch ($name2) {
+                                                                    
                                                                     case 'currency':
-                                                                        $selectName = "$name[$name2]";
+                                                                        $selectName = $name . "[$name2]";
                                                                         $selectValue = @$j[$name][$name2];
                                                                          ?>
                                                                          @include("$path.currency")
@@ -162,10 +157,12 @@ if(getisset("save-area")) {
                                                                         break;
                                                                     
                                                                     default:
+                                                                        $defaultName = $name . "[$name2]";
+                                                                        $defaultValue = @$j[$name][$name2];
+                                                                        $defaultPlaceHolder = $value2;
+
                                                                      ?>
-                                                                        <input type="text" class="form-control" name="{{$name}}[{{$name2}}]" 
-                                                            value="{{@$j[$name][$name2]}}"
-                                                            placeholder="{{$value2}}" id="">  
+                                                                        @include("$path.default")
                         
                                                                      <?php 
                                                                         break;
@@ -174,11 +171,23 @@ if(getisset("save-area")) {
                                                             
                                                            
                                                             <?php } ?>
+                                                            <?php if($name=="variants") {
+                                                                 ?>
+                                                                 <div data-class="{{$name}}{{$name2}}" class="btn btn-danger variant-delete mt-5">Sil</div>
+                                                                 <?php 
+
+                                                            } ?>
                                                         </div>
                                                     </div>
                                                     <?php 
                                                 }
                                             ?>
+                                            <?php if($name=="variants") { ?>
+                                                <div class="col-12">
+                                                    <div class="btn btn-primary"><i class="fa fa-plus"></i> Variant Ekle</div>
+                                                </div>
+                                                <?php 
+                                            } ?>
                                         </div>
                                     <?php 
                                 
