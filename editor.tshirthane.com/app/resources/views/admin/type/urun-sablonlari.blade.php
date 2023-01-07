@@ -94,7 +94,7 @@
                 $alt = db($table_name)->orderBy("id","DESC")->simplePaginate(20); ?>
 				@foreach($alt AS $a)
                 <?php if($a->title=="") $a->title="Adsız şablon"; ?>
-                 {{col("col-md-3",$a->title)}} 
+                 {{col("col-xl-4 col-md-6",$a->title)}} 
                     <div style="width:250px;height:250px;">
                         <img src="{{picture2($a->files,256,0)}}" style=""  alt="">
                     </div>

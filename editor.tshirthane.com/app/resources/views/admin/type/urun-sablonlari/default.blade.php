@@ -1,3 +1,7 @@
 <input type="text" class="form-control" name="{{$defaultName}}" 
                                                             value="{{$defaultValue}}"
-                                                            placeholder="{{$defaultPlaceHolder}}" id="">  
+                                                            <?php if($defaultPlaceHolder!="")  { 
+                                                              ?>
+                                                             title="Örn. {{$defaultPlaceHolder}} yazabilirsiniz" 
+                                                             <?php } ?>
+                                                             id="">  

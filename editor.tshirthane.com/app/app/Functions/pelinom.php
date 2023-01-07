@@ -332,6 +332,9 @@ function picture2($f,$size,$storage=1) {
     $f = url("r.php?p=$f&w=$size");
     return $f;
 }
+function p($f,$size=256) {
+    return picture2($f,$size,0);
+}
 function price($price,$type="¥") {
     $price = str_replace(",","",$price);
     $price = str_replace(".","",$price);
