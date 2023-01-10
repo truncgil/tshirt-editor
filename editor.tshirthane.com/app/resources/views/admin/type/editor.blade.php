@@ -1,3 +1,7 @@
+<?php 
+$width = env("WIDTH"); 
+$height = env("HEIGHT"); 
+?>
 <div class="content">
     <div class="row">
          {{col("col-12","Şablon seçiniz")}}
@@ -30,19 +34,73 @@
                 <h3 class="block-title"><i class="fa fa-{{$c->icon}}"></i> {{e2($c->title)}}</h3>
             </div>
             <div class="block-content text-center">
-                <input type="file" id="file_input" class="form-control">
-            <div id="container"></div>
+                <div class="input-group">
+                    
+                    <input type="file" id="file_input" class="btn btn-outline-success mr-5 mb-5">
+                    <div class="toolbar btn-group d-none">
+                        <button type="button" class="btn btn-outline-danger mr-5 mb-5 delete">
+                            <i class="fa fa-trash mr-5"></i>Görseli sil
+                        </button>
+                        <button type="button" class="btn btn-outline-success mr-5 mb-5 move-up">
+                            <i class="si si-layers mr-5"></i>Öne Getir
+                        </button>
+                        <button type="button" class="btn btn-outline-success mr-5 mb-5 move-down">
+                            <i class="si si-layers mr-5"></i>Alta Gönder
+                        </button>
+                        <select name="" id="" class="form-control blend-mode">
+                            <option value="">Blend Mode</option>
+                            <option value="lighten">Lighten</option>
+                            <option value="darken">Darken</option>
+                        </select>
+                    </div>
+                    
+                    
+                </div>
+                
+           
+            </div>
+
+            
+
+        </div>
+
+    </div>
+    <div id="container"></div>
                 <script>
                     $(function(){
                         // first we need to create a stage
                         var stage = new Konva.Stage({
                             container: 'container',   // id of container <div>
-                            width: 1024,
-                            height: 1024
+                            width: {{$width}} / 3,
+                            height: {{$height}} / 3
                         });
 
                         // then create layer
                         var layer = new Konva.Layer();
+                        var tr = new Konva.Transformer();
+                        var seciliObje; 
+                        var toolbar = $(".toolbar");
+
+                        $(".delete").on("click", function() {
+                            seciliObje.destroy();
+                            tr.nodes([]);
+                            toolbar.addClass("d-none");
+                        });
+
+                        $(".move-down").on("click", function() {
+                            seciliObje.moveToBottom();                      
+                            tr.moveToBottom();                      
+                        });
+                        $(".move-up").on("click", function() {
+                            seciliObje.moveToTop();                      
+                            tr.moveToTop();                      
+                        });
+                        $(".blend-mode").on("change", function() {
+                            console.log($(this).val());
+                            seciliObje.setAttrs({
+                                globalCompositeOperation : $(this).val()
+                            })             
+                        });
 
                        
 
@@ -59,8 +117,8 @@
                                 x: 0,
                                 y: 0,
                                 image: imageObj,
-                                width: 1024,
-                                height: 1024,
+                                width: {{$width}} / 3,
+                                height: {{$height}} / 3,
                               
                                 });
 
@@ -69,7 +127,7 @@
                             };
                             imageObj.src = url;
                         });
-                        var tr = new Konva.Transformer();
+                        
                         $("#file_input").change(function(e){
 
                             var imageLayer = new Konva.Layer();
@@ -96,7 +154,7 @@
                                     width: img_width/ratio,
                                     height: img_height/ratio,
                                     draggable: true,
-                                    globalCompositeOperation : 'lighten',
+                                 //   globalCompositeOperation : 'lighten',
                                     rotation: 0
                                 });
                                 //stage.add(layer);
@@ -107,8 +165,18 @@
                                 tr.nodes([theImg]);
                                 
                                 
+                                
 
                                 imageLayer.draw();
+
+
+                                //events
+
+                                theImg.on('click', function() {
+                                    tr.nodes([theImg]);
+                                    toolbar.removeClass('d-none');
+                                    seciliObje = theImg;
+                                })
                                 
                             }
 
@@ -120,16 +188,11 @@
                 <style>
                     .konvajs-content {
                         margin:0 auto;
-                        border:solid 1px #c1c1c1
+                        border:solid 1px #c1c1c1;
+                        background:white;
+                        content: '\F0637';
                         
                     }
                 </style>
 
-            </div>
-
-            
-
-        </div>
-
-    </div>
 </div>
