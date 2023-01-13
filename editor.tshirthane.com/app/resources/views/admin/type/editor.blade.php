@@ -51,7 +51,7 @@ $height = env("HEIGHT");
             <div class="block-content text-center">
                 <div class="input-group">
                     
-                    <input type="file" id="file_input" class="btn btn-outline-success mr-5 mb-5">
+                    <input type="file" id="file_input" accept="image/png, image/jpeg" class="btn btn-outline-success mr-5 mb-5">
                     <div class="toolbar btn-group d-none">
                         <button type="button" class="btn btn-outline-danger mr-5 mb-5 delete">
                             <i class="fa fa-trash mr-5"></i>Görseli sil
@@ -69,7 +69,10 @@ $height = env("HEIGHT");
                             <option value="darken">Darken</option>
                         </select>
                         <button type="button" class="btn btn-success mr-5 mb-5 save">
-                            <i class="si si-save mr-5"></i>Kaydet
+                            <i class="si si-save mr-5"></i>İndir
+                        </button>
+                        <button type="button" class="btn btn-success mr-5 mb-5 save">
+                            <i class="si si-save mr-5"></i>Ürün Olarak Kaydet
                         </button>
                     </div>
                     
