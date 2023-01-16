@@ -1,4 +1,26 @@
 <?php 
+if(getisset("save")) {
+    print2($_POST);
+    $title = post("title");
+    $slug = str_slug($title);
+    $path = "storage/app/files/urunler/$slug";
+    $mockupPath = "$path/$slug-mockup.jpg";
+    $rawPath = "$path/$slug-raw.jpg";
+    unlink($mockupPath);
+    unlink($rawPath);
+
+    @mkdir("storage/app/files/urunler/$slug",0777,true);
+    base64Image(post("mockup"), $mockupPath);
+    base64Image(post("raw"), $rawPath);
+    ekle2([
+        'title' => post("title"),
+        "raw" => $rawPath,
+        "mockup" => $mockupPath,
+        "slug" => $slug
+    ],"urunler");
+    
+    exit();
+}
 $width = env("WIDTH"); 
 $height = env("HEIGHT"); 
 ?>
@@ -68,13 +90,18 @@ $height = env("HEIGHT");
                             <option value="lighten">Lighten</option>
                             <option value="darken">Darken</option>
                         </select>
-                        <button type="button" class="btn btn-success mr-5 mb-5 save">
-                            <i class="si si-save mr-5"></i>İndir
+                       
+                    </div>
+                    <div class="input-group">
+                        <input type="text" name="" placeholder="Ürün Adı" id="title" class="form-control">
+                        <button type="button" class="btn btn-primary mr-5 mb-5 download">
+                            <i class="fa fa-download mr-5"></i>İndir
                         </button>
                         <button type="button" class="btn btn-success mr-5 mb-5 save">
-                            <i class="si si-save mr-5"></i>Ürün Olarak Kaydet
+                            <i class="fa fa-save mr-5"></i>Ürün Olarak Kaydet
                         </button>
                     </div>
+
                     
                     
                 </div>
@@ -102,6 +129,7 @@ $height = env("HEIGHT");
                         var seciliObje; 
                         var toolbar = $(".toolbar");
                         var loadImageURL;
+                        var productTitle;
 
                         $(".delete").on("click", function() {
                             seciliObje.destroy();
@@ -127,13 +155,39 @@ $height = env("HEIGHT");
                             document.body.removeChild(link);
                             delete link;
                         }
+                        function blobToBase64(blob) {
+                            return new Promise((resolve, _) => {
+                                const reader = new FileReader();
+                                reader.onloadend = () => resolve(reader.result);
+                                reader.readAsDataURL(blob);
+                            });
+                        }
 
-                        $(".save").on("click", function() {
+                        $(".download").on("click", function() {
                             tr.nodes([]);
                             var dataURL = stage.toDataURL();
-                            var raw = stage.toDataURL();
-                            downloadURI(dataURL, 'mockup-tshirthane.png');         
-                            downloadURI(loadImageURL, 'raw-tshirthane.png');         
+                            var rawURL = loadImageURL.toDataURL();
+                            productTitle = $('#title').val();
+                            downloadURI(dataURL, productTitle +  ' mockup-tshirthane.png');         
+                            downloadURI(rawURL, productTitle +  'raw-tshirthane.png');         
+                        });
+                        
+                        $(".save").on("click", function() {
+                            $(this).html("Kaydediliyor...").attr("disabled","disabled");
+                            tr.nodes([]);
+                            var dataURL = stage.toDataURL();
+                            var rawURL = loadImageURL.toDataURL();
+                            productTitle = $('#title').val();
+                            console.log(rawURL);
+                            
+                            $.post("?save",{
+                                mockup : dataURL,
+                                raw : rawURL,
+                                _token : "{{csrf_token()}}",
+                                title : productTitle
+                            },function(){
+                                $(".save").html("Kaydedildi").removeAttr("disabled");
+                            });
                         });
                         
                         $(".blend-mode").on("change", function() {
@@ -153,6 +207,7 @@ $height = env("HEIGHT");
                         var sablon;
 
                         $(".sablon-sec").on("click", function() {
+
                             $("#loading").modal();
                             try {
                                 sablon.destroy();
@@ -189,7 +244,7 @@ $height = env("HEIGHT");
                             var url = URL.createObjectURL(e.target.files[0]);
                             var img = new Image();
                             img.src = url;
-                            loadImageURL = url;
+                            
 
 
                             img.onload = function() {
@@ -212,9 +267,19 @@ $height = env("HEIGHT");
                                  //   globalCompositeOperation : 'lighten',
                                     rotation: 0
                                 });
+
+                                //original size 
+
+                                loadImageURL = new Konva.Image({
+                                    image: img,
+                                    x: 0,
+                                    y: 0,
+                                });
+
                                 //stage.add(layer);
 
                                 layer.add(theImg);
+                                
                                 
                                 layer.add(tr); 
                                 tr.nodes([theImg]);
