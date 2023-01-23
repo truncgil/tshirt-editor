@@ -187,6 +187,7 @@ $(".ckeditor").each(function(){
 		$(".nav-link.active").trigger("click");
 
 		$('form').attr('autocomplete','off');
+		
 
 		$( ".sortable" ).sortable({
 
@@ -225,8 +226,9 @@ $(".ckeditor").each(function(){
 		});
 
 		$( ".draggable" ).draggable();
-
+		
 		$( "ul, li" ).disableSelection();
+		
 
 	} );
 

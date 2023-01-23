@@ -3,7 +3,7 @@
 $path = "admin.type.urun-sablonlari";
 if(getisset("save-area")) {
     //dd($_GET);
-    echo 
+   // echo 
     
     db("urun_sablonlari")
         ->where("id",get("edit"))
@@ -11,7 +11,7 @@ if(getisset("save-area")) {
             'areas' => get("areas")
         ]);
     
-    exit();
+ //   exit();
 } 
 
 ?>

@@ -6,8 +6,8 @@ if(getisset("save")) {
     $path = "storage/app/files/urunler/$slug";
     $mockupPath = "$path/$slug-mockup.jpg";
     $rawPath = "$path/$slug-raw.jpg";
-    unlink($mockupPath);
-    unlink($rawPath);
+    @unlink($mockupPath);
+    @unlink($rawPath);
 
     @mkdir("storage/app/files/urunler/$slug",0777,true);
     base64Image(post("mockup"), $mockupPath);
@@ -18,7 +18,7 @@ if(getisset("save")) {
         "mockup" => $mockupPath,
         "slug" => $slug
     ],"urunler");
-    
+
     exit();
 }
 $width = env("WIDTH"); 
@@ -52,7 +52,7 @@ $height = env("HEIGHT");
                                             <img class="img-fluid" src="{{p($sablon->files,256)}}" alt="">
                                         </div>
                                         <div class="block-content block-content-full bg-body-light">
-                                            <div class="font-w600 mb-5">{{$sablon->title}}</div>
+                                            <div class="font-w600 mb-5 title">{{$sablon->title}}</div>
                                             <div class="font-size-sm text-muted">{{@$j['salePrice']}}</div>
                                         </div>
                                     </a>
@@ -101,6 +101,10 @@ $height = env("HEIGHT");
                             <i class="fa fa-save mr-5"></i>Ürün Olarak Kaydet
                         </button>
                     </div>
+                    <div class="btn-group" style="position:relative;z-index:1000">
+                        <div class="btn btn-warning zoomout"><i class="fa fa-search-minus"></i></div>
+                        <div class="btn btn-warning zoomin"><i class="fa fa-search-plus"></i></div>
+                    </div>
 
                     
                     
@@ -115,6 +119,7 @@ $height = env("HEIGHT");
         <div id="container"></div>
                 <script>
                     $(function(){
+                        
                         // first we need to create a stage
                         var bolum = 1;
                         var stage = new Konva.Stage({
@@ -130,6 +135,20 @@ $height = env("HEIGHT");
                         var toolbar = $(".toolbar");
                         var loadImageURL;
                         var productTitle;
+                        var scale = 1;
+
+                        $(".zoomin").on("click", function(){
+                            scale += 0.1; 
+                            var top = scale * 100;
+                            $("#container").css("transform","scale("+scale+")");
+                         //   $("#container").css("top","-" + top+"px");
+                        });
+                        $(".zoomout").on("click", function(){
+                            scale -= 0.1; 
+                            var top = scale * 100;
+                            $("#container").css("transform","scale("+scale+")");
+                        //    $("#container").css("top","-" + top+"px");
+                        });
 
                         $(".delete").on("click", function() {
                             seciliObje.destroy();
@@ -167,7 +186,7 @@ $height = env("HEIGHT");
                             tr.nodes([]);
                             var dataURL = stage.toDataURL();
                             var rawURL = loadImageURL.toDataURL();
-                            productTitle = $('#title').val();
+                            productTitle += " " + $('#title').val();
                             downloadURI(dataURL, productTitle +  ' mockup-tshirthane.png');         
                             downloadURI(rawURL, productTitle +  'raw-tshirthane.png');         
                         });
@@ -177,7 +196,7 @@ $height = env("HEIGHT");
                             tr.nodes([]);
                             var dataURL = stage.toDataURL();
                             var rawURL = loadImageURL.toDataURL();
-                            productTitle = $('#title').val();
+                            productTitle  += " " +  $('#title').val();
                             console.log(rawURL);
                             
                             $.post("?save",{
@@ -216,7 +235,7 @@ $height = env("HEIGHT");
                             }
                             
                             var url = $(this).attr("data-file");
-                            
+                            productTitle = $(this).find(".title").html();
 
                             var imageObj = new Image();
                             imageObj.onload = function () {
@@ -302,6 +321,7 @@ $height = env("HEIGHT");
 
 
                         });
+
                     });
                     
                 </script>
@@ -312,6 +332,10 @@ $height = env("HEIGHT");
                         background:white;
                         content: '\F0637';
                         
+                    }
+                    #container {
+                        position:relative;
+                        transform-origin: left top;
                     }
                 </style>
 
