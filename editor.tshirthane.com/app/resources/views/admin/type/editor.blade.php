@@ -19,6 +19,18 @@ if(getisset("save")) {
         "slug" => $slug
     ],"urunler");
 
+    $sablon = db("urun_sablonlari")->where("id", post("sablon_id"))->first();
+    if($sablon) {
+        //print2($sablon);
+        $data = j($sablon->json);
+        $data['images'][0]['imageUrl'] = $mockupPath;
+        print2($data);
+
+        //dd($data);
+        sendProduct($data);
+    }
+    
+
     exit();
 }
 $width = env("WIDTH"); 
@@ -47,7 +59,7 @@ $height = env("HEIGHT");
                             $j = j($sablon->json);
                             ?>
                             <div class="col-md-12">
-                                    <a class="block block-link-pop text-center sablon-sec" data-file="{{p($sablon->files,1024)}}" href="javascript:void(0)">
+                                    <a class="block block-link-pop text-center sablon-sec" data-id="{{$sablon->id}}" data-file="{{p($sablon->files,1024)}}" href="javascript:void(0)">
                                         <div class="block-content block-content-full">
                                             <img class="img-fluid" src="{{p($sablon->files,256)}}" alt="">
                                         </div>
@@ -136,6 +148,7 @@ $height = env("HEIGHT");
                         var loadImageURL;
                         var productTitle;
                         var scale = 1;
+                        var sablonID;
 
                         $(".zoomin").on("click", function(){
                             scale += 0.1; 
@@ -203,6 +216,7 @@ $height = env("HEIGHT");
                                 mockup : dataURL,
                                 raw : rawURL,
                                 _token : "{{csrf_token()}}",
+                                sablon_id : sablonID,
                                 title : productTitle
                             },function(){
                                 $(".save").html("Kaydedildi").removeAttr("disabled");
@@ -236,6 +250,7 @@ $height = env("HEIGHT");
                             
                             var url = $(this).attr("data-file");
                             productTitle = $(this).find(".title").html();
+                            sablonID = $(this).attr("data-id");
 
                             var imageObj = new Image();
                             imageObj.onload = function () {
