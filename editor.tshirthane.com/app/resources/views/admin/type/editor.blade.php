@@ -23,7 +23,8 @@ if(getisset("save")) {
     if($sablon) {
         //print2($sablon);
         $data = j($sablon->json);
-        $data['images'][0]['imageUrl'] = $mockupPath;
+        $data['images'][0]['imageUrl'] = env("APP_URL")  . $mockupPath;
+        $data['name'] = post("title");
         print2($data);
 
         //dd($data);
