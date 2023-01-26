@@ -86,6 +86,7 @@ if(getisset("save-area")) {
                         <?php 
                         
                         $array = productArray();
+                        dump($array);
                         if(getisset("edit")) {
                             if(is_array($j)) {
                                 $array = $j;
@@ -97,7 +98,7 @@ if(getisset("save-area")) {
                              ?>
                              <div class="col-md-12">
                                 <div class="border p-10 mb-5 mt-5 rounded">
-                                    {{$name}}
+                                    {{$name}} 
                                     
                                     
                                     <?php if(is_array($value)) {
@@ -193,6 +194,7 @@ if(getisset("save-area")) {
                                     <?php 
                                 
                                     } else  { 
+                                        //echo "($value)";
                                         switch ($name) {
                                             case 'currency':
                                                     $selectName = $name;

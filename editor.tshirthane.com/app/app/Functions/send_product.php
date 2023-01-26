@@ -1,5 +1,6 @@
 <?php 
 function sendProduct($productData) {
+    $productData['code'] = rand();
     $url = "https://www.tshirthane.com/api/v2/product/save";
     $api_key = env("JET_API_KEY");
     $api_secret = env("JET_API_SECRET"); 
@@ -164,7 +165,7 @@ function sendProduct($productData) {
     curl_close ($ch);
     $response = json_decode($result, true);
  //   dump($response);
- dump($data);
+ print2($data);
 
     if (is_array($response)) {
            dump($response);
