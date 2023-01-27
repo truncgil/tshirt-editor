@@ -1,5 +1,5 @@
 <?php function productArray() {
-    return $data =   
+    $data =   
             [ 
                 // Ürün oluşturma/güncelleme (tüm alanlar dahil değilmiştir)
                 'code' => 'DDDDD',
@@ -130,4 +130,12 @@
                     ]
                 ]
         ];
+        
+    $varsayilanVaryantlar = db("varsayilan_varyantlar")->orderBy("id","DESC")->first();
+    
+    if($varsayilanVaryantlar) {
+        $data =  j($varsayilanVaryantlar->json);
+    }
+
+    return $data;
 } ?>
