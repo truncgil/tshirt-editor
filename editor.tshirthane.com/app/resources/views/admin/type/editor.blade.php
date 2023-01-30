@@ -81,7 +81,7 @@ $height = env("HEIGHT");
          <div class="col-md-9">
          <div class="block">
             <div class="block-header block-header-default">
-                <h3 class="block-title"><i class="fa fa-{{$c->icon}}"></i> {{e2($c->title)}}</h3>
+                <h3 class="block-title">Editor</h3>
             </div>
             <div class="block-content text-center">
                 <div class="input-group">
