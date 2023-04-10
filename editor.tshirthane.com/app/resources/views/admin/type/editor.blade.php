@@ -52,14 +52,14 @@ $height = env("HEIGHT");
 </div>
 <div class="content">
     <div class="row">
-         {{col("col-md-3","Şablon seçiniz")}}
+         {{col("col-md-12 sablon-sec","Şablon seçiniz")}}
          <div class="row" sytle="">
-            <div style="overflow:auto;height:800px;">
+           
                 <?php $urun_sablonlari = db("urun_sablonlari")->get();
                     foreach($urun_sablonlari AS $sablon) {
                             $j = j($sablon->json);
                             ?>
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                     <a class="block block-link-pop text-center sablon-sec" data-id="{{$sablon->id}}" data-file="{{p($sablon->files,1024)}}" href="javascript:void(0)">
                                         <div class="block-content block-content-full">
                                             <img class="img-fluid" src="{{p($sablon->files,256)}}" alt="">
@@ -74,7 +74,7 @@ $height = env("HEIGHT");
                             <?php 
                     }
                 ?>
-            </div>
+       
         </div> 
           
          {{_col()}}
@@ -129,7 +129,7 @@ $height = env("HEIGHT");
             
 
         </div>
-        <div id="container"></div>
+        <div id="container" class="d-none"></div>
                 <script>
                     $(function(){
                         

@@ -13,10 +13,17 @@ $keywords = env("APP_KEYWORDS");
 
 
 @section('content')
+<div id="page-container" class="sidebar-o enable-page-overlay side-scroll page-header-fixed side-trans-enabled">
+    @include("partials.header")
+        @include("admin.type.editor")
+    @include("partials.footer")
+</div>
 
-
-@include("admin.type.editor")
-
+<style>
+    .sablon-sec {
+        margin-top:75px;
+    }
+</style>
 
 @endsection
 
